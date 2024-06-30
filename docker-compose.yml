@@ -12,9 +12,11 @@ services:
       DATABASE_PASSWORD: 'postgres'
     tty: true
     stdin_open: true
-    command: /bin/bash -c "sleep 5 && rails webpacker:install && rails webpacker:compile && rails db:create && rails db:migrate && rails s -b 0.0.0.0"
+    entrypoint: /bin/bash docker-entrypoint.sh
+    command: /bin/bash -c "rails db:migrate && rails s -b 0.0.0.0"
     depends_on:
-      - 'db'
+      db:
+        condition: service_healthy
 
   db:
     image: 'postgres:12.19-alpine3.20'
@@ -23,3 +25,8 @@ services:
       POSTGRES_PASSWORD: 'postgres'
     volumes:
       - 'postgres-data:/var/lib/postgresql/data'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -p 5432 -U postgres"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
