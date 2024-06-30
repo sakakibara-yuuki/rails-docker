@@ -26,3 +26,8 @@ docker compose up
 then, you can access the application ad `localhost:3000`
 
 Yes, it's that simple!
+
+
+> [!WARNING]  
+> Only th first, db needs to be setup.
+> setup is automatic, though, `initialize` file is created to determine if it is the first time or not.
